@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+<meta charset="UTF-8">
+<title>Algoritmo de Kruskal</title>
+<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<header>
+    <h1>Algoritmo de Kruskal</h1>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#introduccion">Introducción</a></li>
+        <li><a href="#metodologia">Metodología</a></li>
+        <li><a href="#implementacion">Implementación</a></li>
+        <li><a href="#resultados">Resultados</a></li>
+        <li><a href="#conclusiones">Conclusiones</a></li>
+    </ul>
+</nav>
+
+<main>
+    <section id="introduccion">
+        <h2>Introducción</h2>
+        <p>El Algoritmo de Kruskal es un algoritmo que se utiliza para encontrar el árbol de expansión mínima (TEM) en un grafo no dirigido y conexo. Este algoritmo es fundamental en la teoría de grafos y tiene aplicaciones prácticas en redes, mapas, y optimización.</p>
+    </section>
+
+    <section id="metodologia">
+        <h2>Metodología</h2>
+        <p>El algoritmo de Kruskal se basa en el siguiente procedimiento:</p>
+        <ol>
+            <li>Ordenar los arcos del grafo por su peso (o costo) ascendente.</li>
+            <li>Inicializar un conjunto disjunto para cada vértice del grafo, donde cada vértice es su propio conjunto.</li>
+            <li>Para cada arco en el orden de pesos:</li>
+                <ol>
+                    <li>Si los extremos del arco pertenecen a conjuntos diferentes, unirlos en un solo conjunto.</li>
+                    <li>Agregar el arco al árbol de expansión mínima.</li>
+                </ol>
+            <li>Repetir hasta que se hayan agregado todos los vértices del grafo al árbol de expansión mínima.</li>
+        </ol>
+    </section>
+
+    <section id="implementacion">
+        <h2>Implementación</h2>
+        <p>A continuación, se muestra una implementación básica del Algoritmo de Kruskal en JavaScript:</p>
+        <pre><code>
+            function kruskal(graph) {
+                let edges = [];
+                for (let i = 0; i < graph.length; i++) {
+                    for (let j = i + 1; j < graph.length; j++) {
+                        if (graph[i][j] !== 0) {
+                            edges.push({ source: i, target: j, weight: graph[i][j] });
+                        }
+                    }
+                }
+
+                edges.sort((a, b) => a.weight - b.weight);
+
+                let parent = Array(graph.length).fill(null);
+                let rank = Array(graph.length).fill(0);
+
+                function find(x) {
+                    if (parent[x] === null) return x;
+                    return parent[x] = find(parent[x]);
+                }
+
+                function union(x, y) {
+                    let rootX = find(x);
+                    let rootY = find(y);
+                    if (rootX !== rootY) {
+                        if (rank[rootX] > rank[rootY]) {
+                            parent[rootY] = rootX;
+                        } else if (rank[rootX] < rank[rootY]) {
+                            parent[rootX] = rootY;
+                        } else {
+                            parent[rootY] = rootX;
+                            rank[rootX]++;
+                        }
+                    }
+                }
+
+                let mst = [];
+                for (let edge of edges) {
+                    if (find(edge.source) !== find(edge.target)) {
+                        mst.push(edge);
+                        union(edge.source, edge.target);
+                    }
+                }
+
+                return mst;
+            }
+
+            const graph = [
+                [0, 2, 4],
+                [2, 0, 1],
+                [4, 1, 0]
+            ];
+
+            console.log(kruskal(graph));
+        </code></pre>
+    </section>
+
+    <section id="resultados">
+        <h2>Resultados</h2>
+        <p>El algoritmo de Kruskal encuentra el árbol de expansión mínima para un grafo dado. En el ejemplo anterior, el resultado es:</p>
+        <pre><code>
+            [
+                { source: 0, target: 1, weight: 2 },
+                { source: 1, target: 2, weight: 1 }
+            ]
+        </code></pre>
+    </section>
+
+    <section id="conclusiones">
+        <h2>Conclusiones</h2>
+        <p>El Algoritmo de Kruskal es un algoritmo eficiente para encontrar el árbol de expansión mínima en grafos no dirigidos y conexos. Su implementación en JavaScript muestra que es fácil de entender y aplicar, lo que lo convierte en una herramienta valiosa en la teoría de grafos.</p>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2023 Algoritmo de Kruskal</p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
